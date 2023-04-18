@@ -1,45 +1,64 @@
-Name:           kpublictransport
-Version:        23.04.0
+Name:           opt-kpublictransport
+Version:        23.03.90
 Release:        1%{?dist}
 License:        BSD and CC0-1.0 and LGPLv2+ and MIT and ODbL-1.0
 Summary:        Library to assist with accessing public transport timetables and other data
 Url:            https://invent.kde.org/libraries/kpublictransport
-Source:         https://download.kde.org/stable/release-service/%{version}/src/kpublictransport-%{version}.tar.xz
+Source0: %{name}-%{version}.tar.bz2
 
-BuildRequires: extra-cmake-modules
+%global __requires_exclude ^libKPublicTransport.*$
+%{?opt_kf5_default_filter}
+
+BuildRequires: opt-extra-cmake-modules
 BuildRequires: gcc-c++
-BuildRequires: kf5-rpm-macros
+BuildRequires: opt-kf5-rpm-macros
 BuildRequires: zlib-devel
+BuildRequires: protobuf-devel
 
-BuildRequires: cmake(Qt5Core)
-BuildRequires: cmake(Qt5Quick)
+BuildRequires: opt-qt5-qtbase-devel
+BuildRequires: opt-qt5-qtdeclarative-devel
 
-BuildRequires: cmake(KF5I18n)
-BuildRequires: cmake(KF5NetworkManagerQt)
+BuildRequires: opt-kf5-ki18n-devel
+
+%{?_opt_qt5:Requires: %{_opt_qt5}%{?_isa} = %{_opt_qt5_version}}
+Requires: opt-qt5-qtdeclarative
+Requires: opt-kf5-ki18n
+
 
 %description
 %{summary}.
 
 %prep
-%autosetup
+%autosetup -n %{name}-%{version}/upstream -p1
+
 
 %build
-%cmake_kf5
-%cmake_build
+export QTDIR=%{_opt_qt5_prefix}
+touch .git
+
+mkdir -p build
+pushd build
+
+%_opt_cmake_kf5 ../
+%make_build
+
+popd
 
 %install
-%cmake_install
+pushd build
+make DESTDIR=%{buildroot} install
+popd
 
 %files
-%{_kf5_datadir}/qlogging-categories5/org_kde_kpublictransport.categories
+%{_opt_kf5_datadir}/qlogging-categories5/org_kde_kpublictransport.categories
 
-%{_kf5_libdir}/libKPublicTransport.so.1
-%{_kf5_libdir}/libKPublicTransport.so.%{version}
-%{_kf5_libdir}/libKPublicTransportOnboard.so.1
-%{_kf5_libdir}/libKPublicTransportOnboard.so.%{version}
+%{_opt_kf5_libdir}/libKPublicTransport.so.1
+%{_opt_kf5_libdir}/libKPublicTransport.so.%{version}
+%{_opt_kf5_libdir}/libKPublicTransportOnboard.so.1
+%{_opt_kf5_libdir}/libKPublicTransportOnboard.so.%{version}
 
-%{_kf5_qmldir}/org/kde/kpublictransport/*
-%{_kf5_datadir}/qlogging-categories5/org_kde_kpublictransport_onboard.categories
+%{_opt_kf5_qmldir}/org/kde/kpublictransport/*
+%{_opt_kf5_datadir}/qlogging-categories5/org_kde_kpublictransport_onboard.categories
 
 %package devel
 Summary: Development files for %{name}
@@ -50,47 +69,8 @@ Requires: %{name}%{?_isa} = %{version}-%{release}
 %{summary}.
 
 %files devel
-%{_includedir}/*
+%{_opt_kf5_includedir}/*
 
-%{_kf5_libdir}/cmake/*
-%{_kf5_libdir}/*.so
+%{_opt_kf5_libdir}/cmake/*
+%{_opt_kf5_libdir}/*.so
 
-%changelog
-* Fri Apr 14 2023 Marc Deop i Argemí <marcdeop@fedoraproject.org> - 23.04.0-1
-- 23.04.0
-
-* Fri Mar 31 2023 Marc Deop i Argemí <marcdeop@fedoraproject.org> - 23.03.90-1
-- 23.03.90
-
-* Mon Mar 20 2023 Marc Deop i Argemí <marcdeop@fedoraproject.org> - 23.03.80-1
-- 23.03.80
-
-* Thu Mar 02 2023 Marc Deop i Argemí <marcdeop@fedoraproject.org> - 22.12.3-1
-- 22.12.3
-
-* Tue Jan 31 2023 Marc Deop <marcdeop@fedoraproject.org> - 22.12.2-1
-- 22.12.2
-
-* Thu Jan 19 2023 Fedora Release Engineering <releng@fedoraproject.org> - 22.12.1-2
-- Rebuilt for https://fedoraproject.org/wiki/Fedora_38_Mass_Rebuild
-
-* Sun Jan 08 2023 Marc Deop <marcdeop@fedoraproject.org> - 22.12.1-1
-- 22.12.1
-
-* Thu Jul 21 2022 Fedora Release Engineering <releng@fedoraproject.org> - 22.04.3-2
-- Rebuilt for https://fedoraproject.org/wiki/Fedora_37_Mass_Rebuild
-
-* Mon Jul 18 2022 Than Ngo <than@redhat.com> - 22.04.3-1
-- 22.04.3
-
-* Mon May 16 2022 Justin Zobel <justin@1707.io> - 22.04.1-1
-- Update to 22.04.1
-
-* Thu Apr 21 2022 Justin Zobel <justin@1707.io> - 21.12.3-1
-- Update to 21.12.3
-
-* Wed Feb 09 2022 Justin Zobel <justin@1707.io> - 21.12.2-1
-- Update to 21.12.2
-
-* Wed Dec 22 2021 Justin Zobel <justin@1707.io> - 21.12-1
-- Initial version of package
