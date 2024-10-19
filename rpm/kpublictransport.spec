@@ -1,69 +1,81 @@
-Name:           opt-kpublictransport
-Version:        23.03.90
-Release:        1%{?dist}
-License:        BSD and CC0-1.0 and LGPLv2+ and MIT and ODbL-1.0
+%global kde_version 24.08.2
+%global kf_version 6.6.0
+
+# %%majmin_ver_kf6 operates on %%version, so will get it wrong here:
+%define kf_min_ver %(echo %{kf_version} | cut -d. -f1-2)
+
+Name:           kpublictransport
+Version:        24.08.2
+Release:        0%{?dist}
 Summary:        Library to assist with accessing public transport timetables and other data
-Url:            https://invent.kde.org/libraries/kpublictransport
-Source0: %{name}-%{version}.tar.bz2
+License:        BSD and CC0-1.0 and LGPLv2+ and MIT and ODbL-1.0
+URL:            https://invent.kde.org/libraries/kpublictransport
+Source0:        %{name}-%{version}.tar.bz2
 
-%global __requires_exclude ^libKPublicTransport.*$
-%{?opt_kf5_default_filter}
-
-BuildRequires: opt-extra-cmake-modules
+BuildRequires: cmake
 BuildRequires: gcc-c++
-BuildRequires: opt-kf5-rpm-macros
+BuildRequires: kf6-rpm-macros
+
+#BuildRequires: kf6-extra-cmake-modules >= %%{majmin_ver_kf6}
+BuildRequires: kf6-extra-cmake-modules >= %{kf_min_ver}
+
+BuildRequires: qt6-qtbase-devel
+BuildRequires: qt6-qtdeclarative-devel
+BuildRequires: qt6-qttools-devel
+BuildRequires: qt6-qttools
+
+BuildRequires: kf6-ki18n-devel
+
 BuildRequires: zlib-devel
 BuildRequires: protobuf-devel
 
-BuildRequires: opt-qt5-qtbase-devel
-BuildRequires: opt-qt5-qtdeclarative-devel
-
-BuildRequires: opt-kf5-ki18n-devel
-
-%{?_opt_qt5:Requires: %{_opt_qt5}%{?_isa} = %{_opt_qt5_version}}
-Requires: opt-qt5-qtdeclarative
-Requires: opt-kf5-ki18n
-
+Requires(post): /sbin/ldconfig
+Requires(postun): /sbin/ldconfig
 
 %description
 %{summary}.
 
+%package        devel
+Summary:        Development files for %{name}
+Requires:       %{name} = %{version}-%{release}
+%description    devel
+The %{name}-devel package contains libraries and header files for
+developing applications that use %{name}.
+
+%package        doc
+Summary:        Developer Documentation files for %{name}
+BuildArch:      noarch
+%description    doc
+Developer Documentation files for %{name} for use with KDevelop or QtCreator.
+
 %prep
 %autosetup -n %{name}-%{version}/upstream -p1
 
-
 %build
-export QTDIR=%{_opt_qt5_prefix}
-touch .git
-
-%_opt_cmake_kf5
+%cmake_kf6
 %cmake_build
 
 %install
 %cmake_install
+%find_lang kpublictransport
 
-%files
-%{_opt_kf5_datadir}/qlogging-categories5/org_kde_kpublictransport.categories
+%post -p /sbin/ldconfig
+%postun -p /sbin/ldconfig
 
-%{_opt_kf5_libdir}/libKPublicTransport.so.1
-%{_opt_kf5_libdir}/libKPublicTransport.so.%{version}
-%{_opt_kf5_libdir}/libKPublicTransportOnboard.so.1
-%{_opt_kf5_libdir}/libKPublicTransportOnboard.so.%{version}
-
-%{_opt_kf5_qmldir}/org/kde/kpublictransport/*
-%{_opt_kf5_datadir}/qlogging-categories5/org_kde_kpublictransport_onboard.categories
-
-%package devel
-Summary: Development files for %{name}
-License: BSD and CC0-1.0 and LGPLv2+ and MIT and ODbL-1.0
-Requires: %{name}%{?_isa} = %{version}-%{release}
-
-%description devel
-%{summary}.
+%files -f kpublictransport.lang
+%license LICENSES/*
+%{_kf6_datadir}/qlogging-categories6/*categories
+%{_libdir}/libKPublicTransport.so.*
+%{_libdir}/libKPublicTransportOnboard.so.*
+%{_kf6_qmldir}/org/kde/kpublictransport/
 
 %files devel
-%{_opt_kf5_includedir}/*
+%{_includedir}/KPublicTransport/
+%{_libdir}/cmake/KPublicTransport/
+%{_libdir}/libKPublicTransport.so
+%{_libdir}/libKPublicTransportOnboard.so
+%{_qt6_docdir}/*.tags
 
-%{_opt_kf5_libdir}/cmake/*
-%{_opt_kf5_libdir}/*.so
 
+%files doc
+%{_qt6_docdir}/*.qch
