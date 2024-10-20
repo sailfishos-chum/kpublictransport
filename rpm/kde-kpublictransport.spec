@@ -1,10 +1,8 @@
+%global pkgnameo kpublictransport
 %global kde_version 24.08.2
 %global kf_version 6.6.0
 
-# %%majmin_ver_kf6 operates on %%version, so will get it wrong here:
-%define kf_min_ver %(echo %{kf_version} | cut -d. -f1-2)
-
-Name:           kpublictransport
+Name:           kde-kpublictransport
 Version:        24.08.2
 Release:        0%{?dist}
 Summary:        Library to assist with accessing public transport timetables and other data
@@ -16,8 +14,7 @@ BuildRequires: cmake
 BuildRequires: gcc-c++
 BuildRequires: kf6-rpm-macros
 
-#BuildRequires: kf6-extra-cmake-modules >= %%{majmin_ver_kf6}
-BuildRequires: kf6-extra-cmake-modules >= %{kf_min_ver}
+BuildRequires: kf6-extra-cmake-modules >= %{kf_version}
 
 BuildRequires: qt6-qtbase-devel
 BuildRequires: qt6-qtdeclarative-devel
