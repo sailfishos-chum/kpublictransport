@@ -14,14 +14,19 @@ BuildRequires: cmake
 BuildRequires: gcc-c++
 BuildRequires: kf6-rpm-macros
 
+
 BuildRequires: kf6-extra-cmake-modules >= %{kf_version}
 
 BuildRequires: qt6-qtbase-devel
-BuildRequires: qt6-qtdeclarative-devel
+BuildRequires: pkgconfig(Qt6Gui)
+BuildRequires: pkgconfig(Qt6Quick)
 BuildRequires: qt6-qttools-devel
-BuildRequires: qt6-qttools
 
 BuildRequires: kf6-ki18n-devel
+BuildRequires: kf6-kirigami-addons-devel
+
+BuildRequires: pkgconfig(egl)
+BuildRequires: pkgconfig(glesv2)
 
 BuildRequires: zlib-devel
 BuildRequires: protobuf-devel
