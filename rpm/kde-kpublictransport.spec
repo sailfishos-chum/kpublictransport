@@ -1,6 +1,6 @@
 %global pkgnameo kpublictransport
 %global kde_version 24.08.2
-%global kf_version 6.6.0
+%global kf_version 6.18.0
 
 Name:           kde-kpublictransport
 Version:        24.08.2
@@ -39,12 +39,6 @@ Requires:       %{name} = %{version}-%{release}
 The %{name}-devel package contains libraries and header files for
 developing applications that use %{name}.
 
-%package        doc
-Summary:        Developer Documentation files for %{name}
-BuildArch:      noarch
-%description    doc
-Developer Documentation files for %{name} for use with KDevelop or QtCreator.
-
 %prep
 %autosetup -n %{name}-%{version}/upstream -p1
 
@@ -71,8 +65,4 @@ Developer Documentation files for %{name} for use with KDevelop or QtCreator.
 %{_libdir}/cmake/KPublicTransport/
 %{_libdir}/libKPublicTransport.so
 %{_libdir}/libKPublicTransportOnboard.so
-%{_qt6_docdir}/*.tags
 
-
-%files doc
-%{_qt6_docdir}/*.qch
