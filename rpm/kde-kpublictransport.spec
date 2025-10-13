@@ -1,9 +1,13 @@
 %global pkgnameo kpublictransport
-%global kde_version 25.08.2
+#%%global kde_version 25.08.2
+%global kde_version 25.04.3
 %global kf_version 6.18.0
 
 Name:           kde-kpublictransport
-Version:        25.08.2
+# Note: later versinos than 25.04.3 require CXX23 support.
+# Bump this when that is available.
+#Version:        25.08.2
+Version:        25.04.3
 Release:        0%{?dist}
 Summary:        Library to assist with accessing public transport timetables and other data
 License:        BSD and CC0-1.0 and LGPLv2+ and MIT and ODbL-1.0
