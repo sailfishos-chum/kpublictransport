@@ -1,4 +1,3 @@
-%global pkgnameo kpublictransport
 #%%global kde_version 25.08.2
 %global kde_version 25.04.3
 %global kf_version 6.18.0
