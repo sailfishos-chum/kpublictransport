@@ -26,6 +26,8 @@ BuildRequires: pkgconfig(Qt6Gui)
 BuildRequires: pkgconfig(Qt6Quick)
 BuildRequires: qt6-qttools-devel
 
+BuildRequires: pkgconfig(Qt6Location)
+
 BuildRequires: kf6-ki18n-devel
 BuildRequires: kf6-kirigami-addons-devel
 
